@@ -80,7 +80,9 @@ jobs:
 
       - name: Rename File with Date Suffix
         run: |
-          NEW_NAME="Form_3018_Rockwell_${{ env.date }}.xlsm"
+          OLD_NAME=$(basename "${{ env.MERGED_FILE }}" | sed 's/\.[^.]*$//')
+          OLD_EXTENSION="${{ env.MERGED_FILE }}" | awk -F. '{print $NF}'
+          NEW_NAME="${OLD_NAME}_${{ env.date }}.${OLD_EXTENSION}"
           mv "${{ env.MERGED_FILE }}" "$NEW_NAME"
           echo "RENAMED_FILE=$NEW_NAME" >> $GITHUB_ENV
       - name: Get PR Description
