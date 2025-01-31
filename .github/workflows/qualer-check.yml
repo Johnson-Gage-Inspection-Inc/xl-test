@@ -10,3 +10,6 @@ jobs:
     uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main
     with:
       repo_name: Johnson-Gage-Inspection-Inc/test
+    secrets:
+      QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
+      QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
