@@ -7,6 +7,6 @@ on:
 
 jobs:
   validate:
-    uses: Johnson-Gage-Inspection-Inc/ci-scripts/qualer-check.yml@main
+    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main
     with:
       repo_name: Johnson-Gage-Inspection-Inc/test

@@ -7,6 +7,6 @@ on:
 
 jobs:
   upload:
-    uses: Johnson-Gage-Inspection-Inc/ci-scripts/qualer-upload-release.yml@main
+    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-upload-release.yml@main
     with:
       repo_name: Johnson-Gage-Inspection-Inc/test
