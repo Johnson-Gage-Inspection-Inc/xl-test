@@ -32,6 +32,17 @@ jobs:
           echo "DOC_TITLE=${DOC_TITLE}" >> $GITHUB_OUTPUT
           echo "DOC_DETAILS=${DOC_DETAILS}" >> $GITHUB_OUTPUT
 
+  check-env:
+    needs: load-env
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display env variables
+        run: |
+          echo "SOP_ID: ${{ needs.load-env.outputs.sop_id }}"
+          echo "DOC_ID: ${{ needs.load-env.outputs.doc_id }}"
+          echo "DOC_TITLE: ${{ needs.load-env.outputs.doc_title }}"
+          echo "DOC_DETAILS: ${{ needs.load-env.outputs.doc_details }}"
+
   upload:
     needs: load-env
     uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-upload-release.yml@main
