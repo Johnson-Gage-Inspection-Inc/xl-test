@@ -20,10 +20,8 @@ jobs:
           set -o allexport
           source .env
           set +o allexport
-          for var in $(cat .env | grep -o '^[^#]*' | cut -d= -f1); do
-            echo "$var=${!var}" >> $GITHUB_ENV
-            echo "$var=${!var}" >> $GITHUB_OUTPUT
-          done
+          env_vars_json=$(jq -n 'reduce (inputs | split("=")) as $i ({}; .[$i[0]] = $i[1])' < .env)
+          echo "env_vars=$env_vars_json" >> $GITHUB_OUTPUT
 
   upload:
     needs: load-env
