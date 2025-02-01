@@ -1,0 +1,15 @@
+name: Upload & Release on Merge
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload:
+    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-upload-release.yml@main
+    with:
+      repo_name: Johnson-Gage-Inspection-Inc/test
+    secrets:
+      QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
+      QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
