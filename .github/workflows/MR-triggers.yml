@@ -26,13 +26,14 @@ jobs:
           done
 
   upload:
+    needs: load-env
     uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-upload-release.yml@main
     with:
       repo_name: Johnson-Gage-Inspection-Inc/test
-      sop_id: ${{ env.SOP_ID }}
-      doc_id: ${{ env.DOC_ID }}
-      doc_title: ${{ env.DOC_TITLE }}
-      doc_details: ${{ env.DOC_DETAILS }}
+      sop_id: ${{ needs.load-env.outputs.env_vars.SOP_ID }}
+      doc_id: ${{ needs.load-env.outputs.env_vars.DOC_ID }}
+      doc_title: ${{ needs.load-env.outputs.env_vars.DOC_TITLE }}
+      doc_details: ${{ needs.load-env.outputs.env_vars.DOC_DETAILS }}
     secrets:
       QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
       QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
