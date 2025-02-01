@@ -9,7 +9,10 @@ jobs:
   load-env:
     runs-on: ubuntu-latest
     outputs:
-      env_vars: ${{ steps.export.outputs.env_vars }}
+      sop_id: ${{ steps.export.outputs.SOP_ID }}
+      doc_id: ${{ steps.export.outputs.DOC_ID }}
+      doc_title: ${{ steps.export.outputs.DOC_TITLE }}
+      doc_details: ${{ steps.export.outputs.DOC_DETAILS }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -27,9 +30,19 @@ jobs:
 
   validate:
     needs: load-env
-    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main
-    with:
-      repo_name: Johnson-Gage-Inspection-Inc/test
-    secrets:
-      QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
-      QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Run Qualer Check
+        uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main
+        with:
+          repo_name: Johnson-Gage-Inspection-Inc/test
+          sop_id: ${{ needs.load-env.outputs.sop_id }}  # ✅ Explicitly pass variable
+          doc_id: ${{ needs.load-env.outputs.doc_id }}  # ✅ Explicitly pass variable
+          doc_title: ${{ needs.load-env.outputs.doc_title }}
+          doc_details: ${{ needs.load-env.outputs.doc_details }}
+        env:
+          QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
+          QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
