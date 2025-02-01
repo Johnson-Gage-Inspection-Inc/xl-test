@@ -34,6 +34,7 @@ jobs:
       doc_id: ${{ fromJson(needs.load-env.outputs.env_vars).DOC_ID }}
       doc_title: ${{ fromJson(needs.load-env.outputs.env_vars).DOC_TITLE }}
       doc_details: ${{ fromJson(needs.load-env.outputs.env_vars).DOC_DETAILS }}
+      branch: main
     secrets:
       QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
       QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
