@@ -29,11 +29,11 @@ jobs:
           done
 
   validate:
-    needs: load-env  # ✅ Ensures `load-env` runs first
-    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main  # ✅ Moved to the correct location
+    needs: load-env
+    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main
     with:
       repo_name: Johnson-Gage-Inspection-Inc/test
-      sop_id: ${{ needs.load-env.outputs.sop_id }}  # ✅ Pass .env variables
+      sop_id: ${{ needs.load-env.outputs.sop_id }}
       doc_id: ${{ needs.load-env.outputs.doc_id }}
       doc_title: ${{ needs.load-env.outputs.doc_title }}
       doc_details: ${{ needs.load-env.outputs.doc_details }}
