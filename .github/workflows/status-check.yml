@@ -17,26 +17,19 @@ jobs:
       - name: Load .env and Export Variables
         id: export
         run: |
-          set -o allexport
-          source .env
-          set +o allexport
-          cat .env  # Debugging
-          env_vars_json=$(jq -Rn '
-            (input | split("\n") | map(select(length > 0)) | map(split("="))) as $lines |
-            reduce $lines[] as $line ({}; .[$line[0]] = $line[1])
-          ')
-          echo "env_vars=$env_vars_json" >> $GITHUB_OUTPUT
+          export $(grep -v '^#' .env | xargs)
+          echo "SOP_ID=${SOP_ID}" >> $GITHUB_ENV
+          echo "DOC_ID=${DOC_ID}" >> $GITHUB_ENV
+          echo "DOC_TITLE=${DOC_TITLE}" >> $GITHUB_ENV
+          echo "DOC_DETAILS=${DOC_DETAILS}" >> $GITHUB_ENV
 
   check:
     needs: load-env
     uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main
     with:
       repo_name: Johnson-Gage-Inspection-Inc/test
-      sop_id: ${{ fromJson(needs.load-env.outputs.env_vars).SOP_ID }}
-      doc_id: ${{ fromJson(needs.load-env.outputs.env_vars).DOC_ID }}
-      doc_title: ${{ fromJson(needs.load-env.outputs.env_vars).DOC_TITLE }}
-      doc_details: ${{ fromJson(needs.load-env.outputs.env_vars).DOC_DETAILS }}
       branch: main
+      inputs: ${{ needs.load-env.outputs.env_vars }}
     secrets:
       QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
       QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
