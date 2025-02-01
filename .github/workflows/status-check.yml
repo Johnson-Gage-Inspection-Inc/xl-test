@@ -22,6 +22,7 @@ jobs:
           echo "DOC_ID=${DOC_ID}" >> $GITHUB_ENV
           echo "DOC_TITLE=${DOC_TITLE}" >> $GITHUB_ENV
           echo "DOC_DETAILS=${DOC_DETAILS}" >> $GITHUB_ENV
+          ${{ needs.load-env.outputs.env_vars }} # Debugging
 
   check:
     needs: load-env
