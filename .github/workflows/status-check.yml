@@ -9,7 +9,10 @@ jobs:
   load-env:
     runs-on: ubuntu-latest
     outputs:
-      env_vars: ${{ steps.export.outputs.env_vars }}
+      sop_id: ${{ steps.export.outputs.SOP_ID }}
+      doc_id: ${{ steps.export.outputs.DOC_ID }}
+      doc_title: ${{ steps.export.outputs.DOC_TITLE }}
+      doc_details: ${{ steps.export.outputs.DOC_DETAILS }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -22,7 +25,12 @@ jobs:
           echo "DOC_ID=${DOC_ID}" >> $GITHUB_ENV
           echo "DOC_TITLE=${DOC_TITLE}" >> $GITHUB_ENV
           echo "DOC_DETAILS=${DOC_DETAILS}" >> $GITHUB_ENV
-          ${{ needs.load-env.outputs.env_vars }} # Debugging
+
+          # Set output variables explicitly
+          echo "SOP_ID=${SOP_ID}" >> $GITHUB_OUTPUT
+          echo "DOC_ID=${DOC_ID}" >> $GITHUB_OUTPUT
+          echo "DOC_TITLE=${DOC_TITLE}" >> $GITHUB_OUTPUT
+          echo "DOC_DETAILS=${DOC_DETAILS}" >> $GITHUB_OUTPUT
 
   check:
     needs: load-env
@@ -30,7 +38,10 @@ jobs:
     with:
       repo_name: Johnson-Gage-Inspection-Inc/test
       branch: main
-      inputs: ${{ needs.load-env.outputs.env_vars }}
+      sop_id: ${{ needs.load-env.outputs.sop_id }}
+      doc_id: ${{ needs.load-env.outputs.doc_id }}
+      doc_title: ${{ needs.load-env.outputs.doc_title }}
+      doc_details: ${{ needs.load-env.outputs.doc_details }}
     secrets:
       QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
       QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
