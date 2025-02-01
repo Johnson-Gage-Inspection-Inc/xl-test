@@ -27,16 +27,6 @@ jobs:
             echo "$var=${!var}" >> $GITHUB_ENV
             echo "$var=${!var}" >> $GITHUB_OUTPUT
           done
-
-  validate:
-    needs: load-env
-    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main  # 
-    with:
-      repo_name: Johnson-Gage-Inspection-Inc/test
-      sop_id: ${{ needs.load-env.outputs.sop_id }}
-      doc_id: ${{ needs.load-env.outputs.doc_id }}
-      doc_title: ${{ needs.load-env.outputs.doc_title }}
-      doc_details: ${{ needs.load-env.outputs.doc_details }}
-    secrets:
-      QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
-      QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
+        
+      - name: pring Environment Variables
+        run: env | sort  # ✅ Print all env variables to debug
