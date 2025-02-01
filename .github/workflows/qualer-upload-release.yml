@@ -6,6 +6,25 @@ on:
       - main
 
 jobs:
+  load-env:
+    runs-on: ubuntu-latest
+    outputs:
+      env_vars: ${{ steps.export.outputs.env_vars }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Load .env and Export Variables
+        id: export
+        run: |
+          set -o allexport
+          source .env
+          set +o allexport
+          for var in $(cat .env | grep -o '^[^#]*' | cut -d= -f1); do
+            echo "$var=${!var}" >> $GITHUB_ENV
+            echo "$var=${!var}" >> $GITHUB_OUTPUT
+          done
+
   upload:
     uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-upload-release.yml@main
     with:
