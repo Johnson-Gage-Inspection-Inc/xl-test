@@ -29,20 +29,14 @@ jobs:
           done
 
   validate:
-    needs: load-env
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Run Qualer Check
-        uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main
-        with:
-          repo_name: Johnson-Gage-Inspection-Inc/test
-          sop_id: ${{ needs.load-env.outputs.sop_id }}  # ✅ Explicitly pass variable
-          doc_id: ${{ needs.load-env.outputs.doc_id }}  # ✅ Explicitly pass variable
-          doc_title: ${{ needs.load-env.outputs.doc_title }}
-          doc_details: ${{ needs.load-env.outputs.doc_details }}
-        env:
-          QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
-          QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
+    needs: load-env  # ✅ Ensures `load-env` runs first
+    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main  # ✅ Moved to the correct location
+    with:
+      repo_name: Johnson-Gage-Inspection-Inc/test
+      sop_id: ${{ needs.load-env.outputs.sop_id }}  # ✅ Pass .env variables
+      doc_id: ${{ needs.load-env.outputs.doc_id }}
+      doc_title: ${{ needs.load-env.outputs.doc_title }}
+      doc_details: ${{ needs.load-env.outputs.doc_details }}
+    secrets:
+      QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
+      QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
