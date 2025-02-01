@@ -20,6 +20,7 @@ jobs:
           set -o allexport
           source .env
           set +o allexport
+          cat .env  # Debugging
           env_vars_json=$(jq -n 'reduce (inputs | split("=")) as $i ({}; .[$i[0]] = $i[1])' < .env)
           echo "env_vars=$env_vars_json" >> $GITHUB_OUTPUT
 
