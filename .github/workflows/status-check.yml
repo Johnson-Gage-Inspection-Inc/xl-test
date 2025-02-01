@@ -20,24 +20,44 @@ jobs:
       - name: Load .env and Export Variables
         id: export
         run: |
-          export $(grep -v '^#' .env | xargs)
-          echo "SOP_ID=${SOP_ID}" >> $GITHUB_ENV
-          echo "DOC_ID=${DOC_ID}" >> $GITHUB_ENV
-          echo "DOC_TITLE=${DOC_TITLE}" >> $GITHUB_ENV
-          echo "DOC_DETAILS=${DOC_DETAILS}" >> $GITHUB_ENV
+          set -o allexport
+          source .env
+          set +o allexport
+          for var in $(cat .env | grep -o '^[^#]*' | cut -d= -f1); do
+            echo "$var=${!var}" >> $GITHUB_ENV
+            echo "$var=${!var}" >> $GITHUB_OUTPUT
+          done
 
-          # Set output variables explicitly
-          echo "SOP_ID=${SOP_ID}" >> $GITHUB_OUTPUT
-          echo "DOC_ID=${DOC_ID}" >> $GITHUB_OUTPUT
-          echo "DOC_TITLE=${DOC_TITLE}" >> $GITHUB_OUTPUT
-          echo "DOC_DETAILS=${DOC_DETAILS}" >> $GITHUB_OUTPUT
+      - name: Debug Environment Variables
+        run: env | sort  # ✅ Print all env variables to debug
 
-  check:
+  validate:
     needs: load-env
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Scoped Env Debugging
+        uses: muchobien/scoped-env@v1.1.1
+        with:
+          secrets: ${{ toJson(secrets) }}  # Dumps all secrets for debugging
+          scope: "all"  # Exposes everything
+          includes: "SOP_ID,DOC_ID,DOC_TITLE,DOC_DETAILS"  # Ensure these variables are included
+          overrides: true  # Ensures we override existing variables
+          exporters: "env,output"  # Ensures variables are available
+
+      - name: Debug Scoped Variables
+        run: |
+          echo "SOP_ID: $SOP_ID"
+          echo "DOC_ID: $DOC_ID"
+          echo "DOC_TITLE: $DOC_TITLE"
+          echo "DOC_DETAILS: $DOC_DETAILS"
+      
+  check:
     uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main
     with:
       repo_name: Johnson-Gage-Inspection-Inc/test
-      branch: main
       sop_id: ${{ needs.load-env.outputs.sop_id }}
       doc_id: ${{ needs.load-env.outputs.doc_id }}
       doc_title: ${{ needs.load-env.outputs.doc_title }}
