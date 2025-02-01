@@ -21,5 +21,22 @@ jobs:
           source .env
           set +o allexport
           cat .env  # Debugging
-          env_vars_json=$(jq -n 'reduce (inputs | split("=")) as $i ({}; .[$i[0]] = $i[1])' < .env)
+          env_vars_json=$(jq -Rn '
+            (input | split("\n") | map(select(length > 0)) | map(split("="))) as $lines |
+            reduce $lines[] as $line ({}; .[$line[0]] = $line[1])
+          ')
           echo "env_vars=$env_vars_json" >> $GITHUB_OUTPUT
+
+  check:
+    needs: load-env
+    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main
+    with:
+      repo_name: Johnson-Gage-Inspection-Inc/test
+      sop_id: ${{ fromJson(needs.load-env.outputs.env_vars).SOP_ID }}
+      doc_id: ${{ fromJson(needs.load-env.outputs.env_vars).DOC_ID }}
+      doc_title: ${{ fromJson(needs.load-env.outputs.env_vars).DOC_TITLE }}
+      doc_details: ${{ fromJson(needs.load-env.outputs.env_vars).DOC_DETAILS }}
+      branch: main
+    secrets:
+      QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
+      QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
