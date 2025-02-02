@@ -10,7 +10,7 @@ on:
 
 jobs:
   call-workflow:
-    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main
+    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/build.yml@main
     with:
       repo_name: Johnson-Gage-Inspection-Inc/test
     secrets:
