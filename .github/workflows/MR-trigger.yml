@@ -1,12 +1,15 @@
 name: Upload & Release on Merge
 
 on:
-  pull_request_target:
+  pull_request:
+    types:
+      - closed
     branches:
       - main
 
 jobs:
   MR-workflow:
+    if: github.event.pull_request.merged == true
     uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-upload-release.yml@main
     with:
       repo_name: Johnson-Gage-Inspection-Inc/test
