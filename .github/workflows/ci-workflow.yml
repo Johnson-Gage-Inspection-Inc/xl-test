@@ -1,6 +1,5 @@
 name: Invoke Shared CI Workflow
 
-
 on:
   push:
     branches:
