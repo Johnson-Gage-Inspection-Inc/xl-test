@@ -11,6 +11,9 @@ on:
 
 jobs:
   call-workflow:
-    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/build.yml@main
+    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-check.yml@main
     with:
       ENV_FILE_PATH: .env
+    secrets:
+      QUALER_EMAIL: ${{ secrets.QUALER_EMAIL }}
+      QUALER_PASSWORD: ${{ secrets.QUALER_PASSWORD }}
