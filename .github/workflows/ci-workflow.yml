@@ -1,0 +1,12 @@
+name: Invoke Shared CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  call-workflow:
+    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/build.yml@main
+    with:
+      ENV_FILE_PATH: .env
