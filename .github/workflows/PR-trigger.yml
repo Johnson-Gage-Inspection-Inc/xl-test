@@ -1,4 +1,4 @@
-name: Qualer Pre-Merge Validation
+name: Pre-Merge Checks
 
 on:
   pull_request:
