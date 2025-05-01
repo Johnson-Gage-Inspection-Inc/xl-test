@@ -10,7 +10,7 @@ on:
 jobs:
   MR-workflow:
     if: github.event.pull_request.merged == true
-    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/qualer-upload-release.yml@main
+    uses: Johnson-Gage-Inspection-Inc/ci-scripts/.github/workflows/upload-release.yml@main
     with:
       repo_name: Johnson-Gage-Inspection-Inc/test
     secrets:
